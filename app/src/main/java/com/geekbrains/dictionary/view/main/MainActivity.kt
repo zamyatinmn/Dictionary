@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.geekbrains.dictionary.App
 import com.geekbrains.dictionary.view.main.adapter.MainAdapter
 import com.geekbrains.dictionary.R
 import com.geekbrains.dictionary.databinding.ActivityMainBinding
@@ -25,7 +26,9 @@ class MainActivity: AppCompatActivity() {
     private var adapter: MainAdapter? = null
 
     private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this).get(MainViewModel::class.java)
+        ViewModelProvider(this).get(MainViewModel::class.java).apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     private val onListItemClickListener: MainAdapter.OnListItemClickListener =
@@ -37,6 +40,9 @@ class MainActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        App.instance.appComponent.inject(this)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -65,8 +71,8 @@ class MainActivity: AppCompatActivity() {
                     if (adapter == null) {
                         binding.mainActivityRecyclerview.layoutManager =
                             LinearLayoutManager(applicationContext)
-                        binding.mainActivityRecyclerview.adapter =
-                            MainAdapter(onListItemClickListener, dataModel)
+                        adapter = MainAdapter(onListItemClickListener, dataModel)
+                        binding.mainActivityRecyclerview.adapter = adapter
                     } else {
                         adapter!!.setData(dataModel)
                     }

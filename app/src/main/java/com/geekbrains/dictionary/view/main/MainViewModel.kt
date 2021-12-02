@@ -4,22 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.ViewModel
 import com.geekbrains.dictionary.model.data.AppState
-import com.geekbrains.dictionary.model.datasource.DataSourceLocal
-import com.geekbrains.dictionary.model.datasource.DataSourceRemote
-import com.geekbrains.dictionary.model.repository.Repository
-import com.geekbrains.dictionary.rx.SchedulerProvider
+import com.geekbrains.dictionary.presenter.IInteractor
+import com.geekbrains.dictionary.rx.ISchedulerProvider
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
+import javax.inject.Inject
 
 
-class MainViewModel(
-    private val interactor: MainInteractor = MainInteractor(
-        Repository(DataSourceRemote()),
-        Repository(DataSourceLocal())
-    ),
-    schedulerProvider: SchedulerProvider = SchedulerProvider(),
-) : ViewModel() {
+class MainViewModel : ViewModel() {
+
+    @Inject
+    lateinit var interactor: IInteractor<AppState>
+
+    @Inject
+    lateinit var schedulerProvider: ISchedulerProvider
 
     private val subjectLoading = BehaviorSubject.create<Unit>()
     private val subjectRequest = BehaviorSubject.create<Pair<String, Boolean>>()
