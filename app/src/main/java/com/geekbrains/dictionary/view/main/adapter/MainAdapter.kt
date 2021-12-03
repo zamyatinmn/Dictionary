@@ -1,10 +1,10 @@
 package com.geekbrains.dictionary.view.main.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.geekbrains.dictionary.R
 import com.geekbrains.dictionary.model.data.DataModel
@@ -16,10 +16,11 @@ class MainAdapter(
 ) :
     RecyclerView.Adapter<MainAdapter.RecyclerItemViewHolder>() {
 
-    @SuppressLint("NotifyDataSetChanged")
     fun setData(data: List<DataModel>) {
+        val diffUtilCallback = MainDiffUtilCallback(this.data, data)
+        val diffRes = DiffUtil.calculateDiff(diffUtilCallback)
         this.data = data
-        notifyDataSetChanged()
+        diffRes.dispatchUpdatesTo(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerItemViewHolder {

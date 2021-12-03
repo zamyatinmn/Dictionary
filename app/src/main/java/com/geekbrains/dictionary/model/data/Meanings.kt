@@ -2,9 +2,12 @@ package com.geekbrains.dictionary.model.data
 
 import com.google.gson.annotations.SerializedName
 
-class Meanings(
-    @SerializedName("translation")
+const val TRANSLATION = "translation"
+const val IMAGE_URL = "imageUrl"
+
+data class Meanings(
+    @SerializedName(TRANSLATION)
     val translation: Translation?,
-    @SerializedName("imageUrl")
+    @SerializedName(IMAGE_URL)
     val imageUrl: String?,
 )
