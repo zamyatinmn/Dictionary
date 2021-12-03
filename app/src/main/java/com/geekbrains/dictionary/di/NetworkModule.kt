@@ -1,5 +1,6 @@
 package com.geekbrains.dictionary.di
 
+import com.geekbrains.dictionary.Tools
 import com.geekbrains.dictionary.di.DiConstants.BASE_URL
 import com.geekbrains.dictionary.model.datasource.ApiService
 import com.geekbrains.dictionary.model.datasource.BaseInterceptor
@@ -31,7 +32,9 @@ class NetworkModule {
     fun provideOkHttpClient(interceptor: Interceptor): OkHttpClient {
         val httpClient = OkHttpClient.Builder()
         httpClient.addInterceptor(interceptor)
-        httpClient.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+        if (Tools.isDebug){
+            httpClient.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+        }
         return httpClient.build()
     }
 
