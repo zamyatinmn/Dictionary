@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.geekbrains.dictionary.App
 import com.geekbrains.dictionary.view.main.adapter.MainAdapter
 import com.geekbrains.dictionary.R
+import com.geekbrains.dictionary.Tools
 import com.geekbrains.dictionary.databinding.ActivityMainBinding
 import com.geekbrains.dictionary.model.data.AppState
 import com.geekbrains.dictionary.model.data.DataModel
@@ -53,7 +54,7 @@ class MainActivity: AppCompatActivity() {
             searchDialogFragment.setOnSearchClickListener(object :
                 SearchDialogFragment.OnSearchClickListener {
                 override fun onClick(searchWord: String) {
-                    viewModel.getData(searchWord, true)
+                    viewModel.getData(searchWord, Tools.isOnline())
                 }
             })
             searchDialogFragment.show(supportFragmentManager, BOTTOM_SHEET_FRAGMENT_DIALOG_TAG)
@@ -99,7 +100,7 @@ class MainActivity: AppCompatActivity() {
         showViewError()
         binding.errorTextview.text = error ?: getString(R.string.undefined_error)
         binding.reloadButton.setOnClickListener {
-            viewModel.getData("hi", true)
+            viewModel.getData("hi", Tools.isOnline())
         }
     }
 
