@@ -12,13 +12,10 @@ import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
 
-class MainViewModel : ViewModel() {
-
-    @Inject
-    lateinit var interactor: IInteractor<AppState>
-
-    @Inject
-    lateinit var schedulerProvider: ISchedulerProvider
+class MainViewModel(
+    private val interactor: IInteractor<AppState>,
+    private val schedulerProvider: ISchedulerProvider,
+) : ViewModel() {
 
     private val subjectLoading = BehaviorSubject.create<Unit>()
     private val subjectRequest = BehaviorSubject.create<Pair<String, Boolean>>()

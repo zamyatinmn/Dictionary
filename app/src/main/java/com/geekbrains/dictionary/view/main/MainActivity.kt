@@ -14,6 +14,7 @@ import com.geekbrains.dictionary.Tools
 import com.geekbrains.dictionary.databinding.ActivityMainBinding
 import com.geekbrains.dictionary.model.data.AppState
 import com.geekbrains.dictionary.model.data.DataModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity: AppCompatActivity() {
 
@@ -26,11 +27,7 @@ class MainActivity: AppCompatActivity() {
 
     private var adapter: MainAdapter? = null
 
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this).get(MainViewModel::class.java).apply {
-            App.instance.appComponent.inject(this)
-        }
-    }
+    private val viewModel: MainViewModel by viewModel()
 
     private val onListItemClickListener: MainAdapter.OnListItemClickListener =
         object : MainAdapter.OnListItemClickListener {
@@ -41,9 +38,6 @@ class MainActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        App.instance.appComponent.inject(this)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

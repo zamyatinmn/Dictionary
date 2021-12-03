@@ -5,9 +5,7 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 
-class RetrofitService @Inject constructor(
-    private val apiService: ApiService,
-) : IDataSource<List<DataModel>> {
+class RetrofitService (private val apiService: ApiService) : IDataSource<List<DataModel>> {
 
     override fun getData(word: String): Observable<List<DataModel>> {
         return apiService.search(word)
