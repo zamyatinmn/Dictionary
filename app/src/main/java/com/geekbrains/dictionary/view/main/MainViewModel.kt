@@ -15,10 +15,10 @@ import kotlinx.coroutines.*
 class MainViewModel(
     private val interactor: IInteractor<AppState>,
     private val schedulerProvider: ISchedulerProvider,
-) : ViewModel() {
+): ViewModel() {
 
-    private val scope = CoroutineScope(Dispatchers.Main)
-    private var job: Deferred<AppState>? = null
+    private val scope = CoroutineScope(Dispatchers.IO)
+    private var job: Job? = null
 
     private val subjectLoading = BehaviorSubject.create<Unit>()
     private val subjectResult = BehaviorSubject.create<AppState>()
@@ -33,10 +33,8 @@ class MainViewModel(
     private fun startInteraction(word: String, isOnline: Boolean) {
         job?.cancel()
         var result: AppState
-        scope.launch {
-            withContext(Dispatchers.IO) {
-                result = interactor.getData(word, isOnline)
-            }
+        job = scope.launch {
+            result = interactor.getData(word, isOnline)
             subjectResult.onNext(result)
         }
     }
