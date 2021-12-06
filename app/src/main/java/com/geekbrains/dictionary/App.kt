@@ -6,8 +6,9 @@ import com.geekbrains.dictionary.di.DaggerAppComponent
 
 
 class App: Application() {
-    companion object{
+    companion object {
         lateinit var instance: App
+            private set
     }
 
     lateinit var appComponent: AppComponent

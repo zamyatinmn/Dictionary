@@ -27,9 +27,7 @@ class MainActivity: AppCompatActivity() {
     private var adapter: MainAdapter? = null
 
     private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this).get(MainViewModel::class.java).apply {
-            App.instance.appComponent.inject(this)
-        }
+        ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
     private val onListItemClickListener: MainAdapter.OnListItemClickListener =

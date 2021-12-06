@@ -3,6 +3,7 @@ package com.geekbrains.dictionary.view.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.ViewModel
+import com.geekbrains.dictionary.App
 import com.geekbrains.dictionary.model.data.AppState
 import com.geekbrains.dictionary.presenter.IInteractor
 import com.geekbrains.dictionary.rx.ISchedulerProvider
@@ -13,6 +14,10 @@ import javax.inject.Inject
 
 
 class MainViewModel : ViewModel() {
+
+    init {
+        App.instance.appComponent.inject(this)
+    }
 
     @Inject
     lateinit var interactor: IInteractor<AppState>
