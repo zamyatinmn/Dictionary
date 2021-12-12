@@ -7,6 +7,6 @@ import io.reactivex.Observable
 class RoomDataBase : IDataSource<List<DataModel>> {
 
     override fun getData(word: String): Observable<List<DataModel>> {
-        TODO("not implemented")
+        return Observable.just(listOf(DataModel("Local database not implemented, sorry", null)))
     }
 }

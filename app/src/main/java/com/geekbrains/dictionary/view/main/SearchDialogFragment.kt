@@ -12,7 +12,7 @@ import com.geekbrains.dictionary.databinding.DialogBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
-class SearchDialogFragment : BottomSheetDialogFragment() {
+class SearchDialogFragment: BottomSheetDialogFragment() {
 
     companion object {
         fun newInstance() = SearchDialogFragment()

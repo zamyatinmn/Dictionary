@@ -4,23 +4,18 @@ import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.geekbrains.dictionary.App
 import com.geekbrains.dictionary.view.main.adapter.MainAdapter
 import com.geekbrains.dictionary.R
+import com.geekbrains.dictionary.Tools
 import com.geekbrains.dictionary.databinding.ActivityMainBinding
 import com.geekbrains.dictionary.model.data.AppState
 import com.geekbrains.dictionary.model.data.DataModel
-import com.geekbrains.dictionary.model.datasource.DataSourceLocal
-import com.geekbrains.dictionary.model.datasource.DataSourceRemote
-import com.geekbrains.dictionary.model.repository.Repository
-import com.geekbrains.dictionary.presenter.IPresenter
-import com.geekbrains.dictionary.rx.ISchedulerProvider
-import com.geekbrains.dictionary.rx.SchedulerProvider
-import com.geekbrains.dictionary.view.base.BaseActivity
-import com.geekbrains.dictionary.view.base.IView
-import io.reactivex.disposables.CompositeDisposable
 
-class MainActivity : BaseActivity<AppState>() {
+class MainActivity: AppCompatActivity() {
 
     companion object {
         private const val BOTTOM_SHEET_FRAGMENT_DIALOG_TAG =
@@ -31,6 +26,10 @@ class MainActivity : BaseActivity<AppState>() {
 
     private var adapter: MainAdapter? = null
 
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(this).get(MainViewModel::class.java)
+    }
+
     private val onListItemClickListener: MainAdapter.OnListItemClickListener =
         object : MainAdapter.OnListItemClickListener {
             override fun onItemClick(data: DataModel) {
@@ -38,32 +37,29 @@ class MainActivity : BaseActivity<AppState>() {
             }
         }
 
-    override fun createPresenter(): IPresenter<AppState, IView> = MainPresenter(
-        MainInteractor(
-            Repository(DataSourceRemote()),
-            Repository(DataSourceLocal())
-        ),
-        CompositeDisposable(),
-        SchedulerProvider(),
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        App.instance.appComponent.inject(this)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        viewModel.getLiveData().observe(this, {renderData(it)})
+
         binding.searchFab.setOnClickListener {
             val searchDialogFragment = SearchDialogFragment.newInstance()
             searchDialogFragment.setOnSearchClickListener(object :
                 SearchDialogFragment.OnSearchClickListener {
                 override fun onClick(searchWord: String) {
-                    presenter.getData(searchWord, true)
+                    viewModel.getData(searchWord, Tools.isOnline())
                 }
             })
             searchDialogFragment.show(supportFragmentManager, BOTTOM_SHEET_FRAGMENT_DIALOG_TAG)
         }
     }
 
-    override fun renderData(appState: AppState) {
+    private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Success -> {
                 val dataModel = appState.data
@@ -74,8 +70,8 @@ class MainActivity : BaseActivity<AppState>() {
                     if (adapter == null) {
                         binding.mainActivityRecyclerview.layoutManager =
                             LinearLayoutManager(applicationContext)
-                        binding.mainActivityRecyclerview.adapter =
-                            MainAdapter(onListItemClickListener, dataModel)
+                        adapter = MainAdapter(onListItemClickListener, dataModel)
+                        binding.mainActivityRecyclerview.adapter = adapter
                     } else {
                         adapter!!.setData(dataModel)
                     }
@@ -102,7 +98,7 @@ class MainActivity : BaseActivity<AppState>() {
         showViewError()
         binding.errorTextview.text = error ?: getString(R.string.undefined_error)
         binding.reloadButton.setOnClickListener {
-            presenter.getData("hi", true)
+            viewModel.getData("hi", Tools.isOnline())
         }
     }
 

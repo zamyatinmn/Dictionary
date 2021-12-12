@@ -2,7 +2,9 @@ package com.geekbrains.dictionary.model.data
 
 import com.google.gson.annotations.SerializedName
 
-class Translation(
-    @SerializedName("text")
+const val TEXT = "text"
+
+data class Translation(
+    @SerializedName(TEXT)
     val translation: String?,
 )
