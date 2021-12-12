@@ -1,13 +1,12 @@
 package com.geekbrains.dictionary.model.repository
 
-import com.geekbrains.dictionary.model.datasource.IDataSource
 import com.geekbrains.dictionary.model.data.DataModel
-import io.reactivex.Observable
+import com.geekbrains.dictionary.model.datasource.IDataSource
 
 
 class Repository(private val dataSource: IDataSource<List<DataModel>>) :
     IRepository<List<DataModel>> {
-    override fun getData(word: String): Observable<List<DataModel>> {
+    override suspend fun getData(word: String): List<DataModel> {
         return dataSource.getData(word)
     }
 }
