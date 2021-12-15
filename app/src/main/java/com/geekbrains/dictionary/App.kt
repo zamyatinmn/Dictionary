@@ -20,7 +20,8 @@ class App: Application() {
             modules(
                 KoinDi.mainModule,
                 KoinDi.networkModule,
-                KoinDi.repoModule
+                KoinDi.repoModule,
+                KoinDi.persistenceModule
             )
         }
     }
