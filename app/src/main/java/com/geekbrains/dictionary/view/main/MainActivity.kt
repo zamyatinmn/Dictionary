@@ -1,19 +1,19 @@
 package com.geekbrains.dictionary.view.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.geekbrains.dictionary.App
-import com.geekbrains.dictionary.view.main.adapter.MainAdapter
+import com.geekbrains.dictionary.Constants
 import com.geekbrains.dictionary.R
 import com.geekbrains.dictionary.Tools
 import com.geekbrains.dictionary.databinding.ActivityMainBinding
 import com.geekbrains.dictionary.model.data.AppState
 import com.geekbrains.dictionary.model.data.DataModel
+import com.geekbrains.dictionary.view.DetailActivity
+import com.geekbrains.dictionary.view.main.adapter.MainAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity: AppCompatActivity() {
@@ -32,7 +32,10 @@ class MainActivity: AppCompatActivity() {
     private val onListItemClickListener: MainAdapter.OnListItemClickListener =
         object : MainAdapter.OnListItemClickListener {
             override fun onItemClick(data: DataModel) {
-                Toast.makeText(this@MainActivity, data.text, Toast.LENGTH_SHORT).show()
+                startActivity(
+                    Intent(this@MainActivity, DetailActivity::class.java)
+                        .apply { putExtra(Constants.DATA_MODEL_BUNDLE_KEY, data) }
+                )
             }
         }
 
