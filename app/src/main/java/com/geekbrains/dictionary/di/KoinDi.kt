@@ -1,11 +1,14 @@
 package com.geekbrains.dictionary.di
 
+import androidx.room.Room
 import com.geekbrains.dictionary.Tools
 import com.geekbrains.dictionary.di.DiConstants.BASE_URL
+import com.geekbrains.dictionary.di.DiConstants.DATABASE_NAME
 import com.geekbrains.dictionary.di.DiConstants.NAME_LOCAL
 import com.geekbrains.dictionary.di.DiConstants.NAME_REMOTE
 import com.geekbrains.dictionary.model.data.AppState
 import com.geekbrains.dictionary.model.data.DataModel
+import com.geekbrains.dictionary.model.database.AppDatabase
 import com.geekbrains.dictionary.model.datasource.*
 import com.geekbrains.dictionary.model.repository.IRepository
 import com.geekbrains.dictionary.model.repository.Repository
@@ -18,6 +21,7 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -54,7 +58,10 @@ object KoinDi {
     val repoModule = module {
         single<ISchedulerProvider> { SchedulerProvider() }
         single { RetrofitService(apiService = get()) }
-        single<IRepository<List<DataModel>>>(named(NAME_LOCAL)) { Repository(DataSourceLocal()) }
+        single { RoomDataBase(dao = get()) }
+        single<IRepository<List<DataModel>>>(named(NAME_LOCAL)) {
+            Repository(DataSourceLocal(remoteProvider = get()))
+        }
         single<IRepository<List<DataModel>>>(named(NAME_REMOTE)) {
             Repository(DataSourceRemote(remoteProvider = get()))
         }
@@ -63,6 +70,15 @@ object KoinDi {
                 remoteRepository = get(named(NAME_REMOTE)),
                 localRepository = get(named(NAME_LOCAL))
             )
+        }
+    }
+
+    val persistenceModule = module {
+        single {
+            Room.databaseBuilder(androidContext(), AppDatabase::class.java, DATABASE_NAME).build()
+        }
+        single {
+            get<AppDatabase>().getDao()
         }
     }
 }
