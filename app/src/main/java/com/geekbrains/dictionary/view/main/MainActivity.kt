@@ -96,8 +96,8 @@ class MainActivity: AppCompatActivity() {
     private fun showErrorScreen(error: String?) {
         showViewError()
         binding.errorTextview.text = error ?: getString(R.string.undefined_error)
-        binding.reloadButton.setOnClickListener {
-            viewModel.getData("hi", Tools.isOnline())
+        binding.historyButton.setOnClickListener {
+            viewModel.showHistory()
         }
     }
 

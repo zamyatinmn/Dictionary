@@ -11,6 +11,9 @@ interface DataModelDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(list: List<DataModel>)
 
+    @Query("SELECT * FROM datamodel")
+    suspend fun getAll(): List<DataModel>
+
     @Query("SELECT * FROM datamodel WHERE text = :query")
     suspend fun getAllByQuery(query: String): List<DataModel>
 }

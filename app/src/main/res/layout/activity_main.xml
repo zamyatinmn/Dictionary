@@ -61,9 +61,9 @@
             android:text="@string/error_textview_stub" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/reload_button"
+            android:id="@+id/history_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/reload_button" />
+            android:text="@string/history_button" />
     </LinearLayout>
 </FrameLayout>

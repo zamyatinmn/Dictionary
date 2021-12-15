@@ -39,6 +39,10 @@ class MainViewModel(
         }
     }
 
+    fun showHistory(){
+        startInteraction("", false)
+    }
+
     fun getData(word: String, isOnline: Boolean) {
         startInteraction(word, isOnline)
     }
